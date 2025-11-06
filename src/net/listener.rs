@@ -33,4 +33,7 @@ impl UnixListener {
         )?;
         Ok((UnixStream(s), SocketAddr { addr, addrlen }))
     }
+    pub fn local_addr(&self)->io::Result<SocketAddr>{
+        self.0.local_addr()
+    }
 }

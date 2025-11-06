@@ -8,7 +8,10 @@ use windows::Win32::Networking::WinSock::{
     self, AF_UNIX, INVALID_SOCKET, SEND_RECV_FLAGS, SOCK_STREAM, SOCKADDR, SOCKET, SOCKET_ERROR,
 };
 
-use crate::common::{startup, wsa_error};
+use crate::{
+    common::{startup, wsa_error},
+    net::SocketAddr,
+};
 // wrap Winsock method like std
 pub struct Socket(pub SOCKET);
 
@@ -65,6 +68,19 @@ impl Socket {
                 INVALID_SOCKET => Err(wsa_error()),
                 s => Ok(Socket(s)),
             }
+        }
+    }
+    pub fn local_addr(&self) -> io::Result<SocketAddr> {
+        let mut addr = SocketAddr::default();
+        match unsafe {
+            WinSock::getsockname(
+                self.0,
+                &mut addr.addr as *mut _ as *mut _,
+                &mut addr.addrlen as *mut _,
+            )
+        } {
+            SOCKET_ERROR => Err(wsa_error()),
+            _ => Ok(addr),
         }
     }
 }

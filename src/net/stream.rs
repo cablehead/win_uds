@@ -1,5 +1,5 @@
 use crate::common::*;
-use crate::net::{Socket, socketaddr_un};
+use crate::net::{Socket, SocketAddr, socketaddr_un};
 use std::{io, path::Path};
 use windows::Win32::Networking::WinSock::{self, SOCKET_ERROR};
 
@@ -15,6 +15,9 @@ impl UnixStream {
                 _ => Ok(Self(s)),
             }
         }
+    }
+    pub fn local_addr(&self)->io::Result<SocketAddr>{
+        self.0.local_addr()
     }
 }
 
