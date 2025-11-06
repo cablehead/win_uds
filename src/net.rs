@@ -1,10 +1,6 @@
-//mod addr;
 mod listener;
-//mod socket;
 mod stream;
-//pub use addr::*;
 pub use listener::*;
-//pub use socket::*;
-pub use socket2::SockAddr;
-pub use socket2::Socket;
+use socket2::SockAddr;
+use socket2::Socket;
 pub use stream::*;
