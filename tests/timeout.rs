@@ -36,18 +36,18 @@ fn write_time_out() {
 
     let listener = UnixListener::bind(&path).unwrap();
     let srv = std::thread::spawn(move || {
-        let (mut _stream, _) = listener.accept().unwrap();
-        std::thread::sleep(Duration::from_secs(2));
+        let (mut stream, _) = listener.accept().unwrap();
+        let buf = vec![b'X'; 64 * 1024];
+        stream
+            .set_write_timeout(Some(Duration::from_secs(1)))
+            .unwrap();
+        assert!(stream.write(buf.as_slice()).is_err());
     });
 
     let path_clone = path.clone();
     let cli = std::thread::spawn(move || {
         let mut stream = UnixStream::connect(&path_clone).unwrap();
-        stream
-            .set_write_timeout(Some(Duration::from_secs(1)))
-            .unwrap();
-        let mut buf = [0u8; 1];
-        assert!(stream.read(&mut buf).is_err());
+        std::thread::sleep(Duration::from_secs(3))
     });
 
     cli.join().unwrap();
