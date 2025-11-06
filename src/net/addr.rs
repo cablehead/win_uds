@@ -3,7 +3,7 @@ use std::{io, path::Path, ptr};
 use windows::Win32::Networking::WinSock::{ADDRESS_FAMILY, AF_UNIX, SOCKADDR_UN};
 
 pub fn socketaddr_un(path: &Path) -> io::Result<(SOCKADDR_UN, i32)> {
-    let bytes = path.as_os_str().as_encoded_bytes();
+    // let bytes = path.as_os_str().as_encoded_bytes();
     let mut sockaddr = SOCKADDR_UN::default();
     // Winsock2 expects 'sun_path' to be a Win32 UTF-8 file system path
     let bytes = path.to_str().map(|s| s.as_bytes()).ok_or_else(|| {
