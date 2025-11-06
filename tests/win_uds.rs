@@ -2,13 +2,13 @@ use std::io::Read;
 use std::io::Write;
 use win_uds::net::*;
 #[test]
-fn win_uds_echo() {
+fn echo() {
     let tmp = std::env::temp_dir();
     let sock_path = tmp.join("test-uds-echo.sock");
     let _ = std::fs::remove_file(&sock_path);
     let listener = UnixListener::bind(&sock_path).unwrap();
     let srv = std::thread::spawn(move || {
-        let (mut stream, addr) = listener.accept().expect("accept failed");
+        let (mut stream, _addr) = listener.accept().expect("accept failed");
         let mut buf = [0u8; 128];
         let n = match stream.read(&mut buf) {
             Ok(n) => n,
