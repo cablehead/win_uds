@@ -38,6 +38,9 @@ impl UnixStream {
     pub fn take_error(&self) -> io::Result<Option<io::Error>> {
         self.0.take_error()
     }
+    pub fn set_nonblocking(&self, nonblocking: bool) -> io::Result<()> {
+        self.0.set_nonblocking(nonblocking)
+    }
 }
 
 impl io::Write for UnixStream {

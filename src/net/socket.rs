@@ -9,8 +9,8 @@ use std::{
 
 use windows::{
     Win32::Networking::WinSock::{
-        self, AF_UNIX, INVALID_SOCKET, SEND_RECV_FLAGS, SO_ERROR, SOCK_STREAM, SOCKADDR, SOCKET,
-        SOCKET_ERROR, SOL_SOCKET,
+        self, AF_UNIX, FIONBIO, INVALID_SOCKET, SEND_RECV_FLAGS, SO_ERROR, SOCK_STREAM, SOCKADDR,
+        SOCKET, SOCKET_ERROR, SOL_SOCKET,
     },
     core::PSTR,
 };
@@ -123,6 +123,13 @@ impl Socket {
                     }
                 }
             }
+        }
+    }
+    pub fn set_nonblocking(&self, nonblocking: bool) -> io::Result<()> {
+        let mut val = if nonblocking { 1u32 } else { 0 };
+        match unsafe { WinSock::ioctlsocket(self.0, FIONBIO, &mut val as *mut _) } {
+            SOCKET_ERROR => Err(wsa_error()),
+            _ => Ok(()),
         }
     }
 }
