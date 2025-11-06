@@ -55,6 +55,8 @@ impl Socket {
         addrlen: Option<*mut i32>,
     ) -> io::Result<Socket> {
         unsafe {
+            // or we should just use None None here because
+            // seems like accept write nothing to addr and addrlen
             match WinSock::accept(self.0, addr, addrlen)? {
                 INVALID_SOCKET => Err(wsa_error()),
                 s => Ok(Socket(s)),
