@@ -14,6 +14,14 @@ impl AsyncStream {
         s.set_nonblocking(true)?;
         Ok(Self(s))
     }
+    pub fn connect_addr(socket_addr: &SockAddr) -> io::Result<Self> {
+        let s = UnixStream::connect_addr(socket_addr)?;
+        s.set_nonblocking(true)?;
+        Ok(Self(s))
+    }
+    pub fn try_clone(&self) -> io::Result<Self> {
+        self.0.try_clone().map(AsyncStream)
+    }
 }
 impl AsyncRead for AsyncStream {
     fn poll_read(
@@ -78,6 +86,14 @@ impl AsyncListener {
         let s = UnixListener::bind(path)?;
         s.set_nonblocking(true)?;
         Ok(Self(s))
+    }
+    pub fn bind_addr(socket_addr: &SockAddr) -> io::Result<Self> {
+        let s = UnixListener::bind_addr(socket_addr)?;
+        s.set_nonblocking(true)?;
+        Ok(Self(s))
+    }
+    pub fn try_clone(&self) -> io::Result<Self> {
+        self.0.try_clone().map(AsyncListener)
     }
 }
 impl Deref for AsyncStream {
