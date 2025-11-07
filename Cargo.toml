@@ -8,4 +8,7 @@ repository = "https://github.com/kouhe3/win_uds"
 [package.metadata.docs.rs]
 default-target = "x86_64-pc-windows-msvc"
 [dependencies]
+futures = "0.3.31"
 socket2 = "0.6.1"
+[dev-dependencies]
+tokio = { version = "1.48", features = ["full"] }
